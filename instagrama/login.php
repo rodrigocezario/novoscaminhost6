@@ -1,18 +1,18 @@
 <?php
 
-require "dao/conexao.php";
+//require "dao/conexao.php";
 
 //teste com a conexão com banco de dados
 
-try {
+// try {
 
-    $conexao = Conexao::getConnection();
-    echo "Conexão com banco de dados realizada com sucesso!";
+//     $conexao = Conexao::getConnection();
+//     echo "Conexão com banco de dados realizada com sucesso!";
 
-} catch (\Throwable $th) {
-    //throw $th;
-    echo "Erro ao conectar com BD: ". $th->getMessage() ;
-}
+// } catch (\Throwable $th) {
+//     //throw $th;
+//     echo "Erro ao conectar com BD: ". $th->getMessage() ;
+// }
 
 ?>
 
@@ -53,8 +53,10 @@ try {
         //ESSE CÓDIGO SERÁ REFATORADO EM BREVE!!!
         session_start();
         //login e senha mockados
-        $LOGIN = "rodrigo";
-        $SENHA = "123vai";
+        // $LOGIN = "rodrigo";
+        // $SENHA = "123vai";
+
+        require_once "configuracoes.php";
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             //echo "Processando o formulário com post!";
@@ -63,13 +65,28 @@ try {
                 $login = $_POST["login"];
                 $senha = $_POST["senha"];
 
-                if($login == $LOGIN && $senha == $SENHA){
-                    //sucesso!
-                    $_SESSION["USUARIO"] = "Rodrigo Cezario";
+                try {
+                    $dao = new PessoaDao();
+
+                    $dto = new LoginDto($login, $senha);
+
+                    $pessoa = $dao->logar($dto);
+
+                    $_SESSION["USUARIO"] = serialize($pessoa);
+
                     header("Location: index.php");
-                }else {
-                    echo "Login ou senha incorreto!";
+
+                } catch (\Throwable $th) {
+                    echo "Erro: ". $th->getMessage() ;
                 }
+
+                // if($login == $LOGIN && $senha == $SENHA){
+                //     //sucesso!
+                //     $_SESSION["USUARIO"] = "Rodrigo Cezario";
+                //     header("Location: index.php");
+                // }else {
+                //     echo "Login ou senha incorreto!";
+                // }
 
             }
         }

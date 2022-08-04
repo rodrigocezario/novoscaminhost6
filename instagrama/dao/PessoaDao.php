@@ -35,12 +35,12 @@ class PessoaDao extends AbstractDao {
         $st->execute();
     }
 
-    public function logar($obj) {
+    public function logar($dto) {
 
         $sql = "select * from Pessoa where PessoaEmail = ? and PessoaSenha = ?";
         $st = $this->conexao->prepare($sql);
-        $st->bindValue(1, $obj->getEmail(), PDO::PARAM_STR);
-        $st->bindValue(2, $obj->getSenha(), PDO::PARAM_STR);
+        $st->bindValue(1, $dto->getLogin(), PDO::PARAM_STR);
+        $st->bindValue(2, $dto->getSenha(), PDO::PARAM_STR);
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->execute();
 
